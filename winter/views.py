@@ -56,13 +56,14 @@ def register_stu(request):
         password = form.cleaned_data['password']
         user.set_password(password)
         user.save()
-        student.user=user
-        student.student_name=username
         user = authenticate(username=username, password=password)
         if user is not None:
             if user.is_active:
                 login(request, user)
-                return render(request, 'winter/dashboard.html', {'user': user})
+		student.user=request.user
+                student.student_name=request.user.username
+		student.save()
+                return render(request, 'winter/dashboard_stu.html', {'user': user})
     context = {
         "form": form,
     }
